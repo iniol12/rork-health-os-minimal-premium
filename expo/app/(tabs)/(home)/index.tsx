@@ -44,7 +44,7 @@ export default function HomeScreen() {
       <Animated.View style={[styles.header, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
         <View style={styles.headerTop}>
           <View>
-            <Text style={styles.greeting}>Health OS</Text>
+            <Text style={styles.greeting}>Clario OS</Text>
             <Text style={styles.subtitle}>Your biological dashboard</Text>
           </View>
           <View style={styles.overallBadge}>

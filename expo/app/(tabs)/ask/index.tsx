@@ -164,7 +164,7 @@ export default function AskScreen() {
         {/* AI RESPONSE 1 */}
         <Animated.View style={[styles.aiRow, { opacity: resp1Opacity, transform: [{ translateY: resp1Slide }] }]}>
           <View style={styles.aiModelTag}>
-            <Text style={styles.aiModelText}>Health OS · Metabolic Analysis</Text>
+            <Text style={styles.aiModelText}>Clario OS · Metabolic Analysis</Text>
           </View>
           <View style={styles.aiCard}>
             <View style={styles.summaryRow}>
@@ -221,7 +221,7 @@ export default function AskScreen() {
         {/* AI RESPONSE 2 */}
         <Animated.View style={[styles.aiRow, { opacity: resp2Opacity, transform: [{ translateY: resp2Slide }] }]}>
           <View style={styles.aiModelTag}>
-            <Text style={styles.aiModelText}>Health OS · Metabolic Analysis</Text>
+            <Text style={styles.aiModelText}>Clario OS · Metabolic Analysis</Text>
           </View>
           <View style={[styles.aiCard, styles.aiCardPositive]}>
             <View style={styles.summaryRow}>
