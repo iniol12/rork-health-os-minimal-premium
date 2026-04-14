@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, useWindowDimensions, Image } from 'react-native';
 import { organs } from '@/mocks/organData';
+import { useTheme } from '@/contexts/ThemeContext';
 import OrganPointer from './OrganPointer';
 
 interface BodySilhouetteProps {
@@ -10,17 +11,27 @@ interface BodySilhouetteProps {
 const BODY_IMAGE_URI = 'https://r2-pub.rork.com/generated-images/0d759d70-e78c-45a9-b420-ff4a6021ca35.png';
 
 export default function BodySilhouette({ onOrganPress }: BodySilhouetteProps) {
-  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  const { width: screenWidth } = useWindowDimensions();
+  const { isDark } = useTheme();
   const bodyWidth = Math.min(screenWidth * 0.82, 340);
   const bodyHeight = bodyWidth * 1.5;
 
   return (
     <View style={[styles.container, { width: bodyWidth, height: bodyHeight }]}>
-      <Image
-        source={{ uri: BODY_IMAGE_URI }}
-        style={[styles.bodyImage, { width: bodyWidth, height: bodyHeight }]}
-        resizeMode="contain"
-      />
+      <View style={[
+        styles.imageWrap,
+        !isDark && styles.lightImageWrap,
+      ]}>
+        <Image
+          source={{ uri: BODY_IMAGE_URI }}
+          style={[
+            styles.bodyImage,
+            { width: bodyWidth, height: bodyHeight },
+            !isDark && styles.lightBodyImage,
+          ]}
+          resizeMode="contain"
+        />
+      </View>
 
       {organs.map((organ) => (
         <OrganPointer
@@ -41,7 +52,18 @@ const styles = StyleSheet.create({
     alignSelf: 'center' as const,
     position: 'relative' as const,
   },
+  imageWrap: {
+    borderRadius: 20,
+    overflow: 'hidden' as const,
+  },
+  lightImageWrap: {
+    backgroundColor: 'rgba(0,0,0,0.04)',
+    borderRadius: 24,
+  },
   bodyImage: {
     opacity: 0.95,
+  },
+  lightBodyImage: {
+    opacity: 0.85,
   },
 });

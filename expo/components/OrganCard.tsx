@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react-native';
-import colors, { getStatusColor, getStatusMuted } from '@/constants/colors';
+import { useTheme } from '@/contexts/ThemeContext';
+import { getStatusColor, getStatusMuted } from '@/constants/colors';
 import { OrganData } from '@/mocks/organData';
 
 interface OrganCardProps {
@@ -10,15 +11,16 @@ interface OrganCardProps {
 }
 
 export default function OrganCard({ organ, onPress }: OrganCardProps) {
-  const statusColor = getStatusColor(organ.status);
-  const statusBg = getStatusMuted(organ.status);
+  const { colors } = useTheme();
+  const statusColor = getStatusColor(organ.status, colors);
+  const statusBg = getStatusMuted(organ.status, colors);
   const trendPositive = organ.trend > 0;
   const trendNeutral = organ.trend === 0;
 
   return (
     <TouchableOpacity
       testID={`organ-card-${organ.id}`}
-      style={styles.card}
+      style={[styles.card, { backgroundColor: colors.card, borderColor: colors.borderSubtle }]}
       onPress={onPress}
       activeOpacity={0.7}
     >
@@ -41,8 +43,8 @@ export default function OrganCard({ organ, onPress }: OrganCardProps) {
           </Text>
         </View>
       </View>
-      <Text style={styles.name}>{organ.name}</Text>
-      <Text style={styles.statusLabel}>
+      <Text style={[styles.name, { color: colors.textPrimary }]}>{organ.name}</Text>
+      <Text style={[styles.statusLabel, { color: colors.textTertiary }]}>
         {organ.status === 'strong' ? 'Strong' : organ.status === 'watch' ? 'Watch' : 'Needs attention'}
       </Text>
     </TouchableOpacity>
@@ -51,11 +53,9 @@ export default function OrganCard({ organ, onPress }: OrganCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.card,
     borderRadius: 14,
     padding: 14,
     borderWidth: 1,
-    borderColor: colors.borderSubtle,
     flex: 1,
     minHeight: 110,
   },
@@ -88,14 +88,12 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 15,
-    color: colors.textPrimary,
     fontWeight: '600' as const,
     letterSpacing: -0.2,
     marginBottom: 2,
   },
   statusLabel: {
     fontSize: 12,
-    color: colors.textTertiary,
     fontWeight: '500' as const,
   },
 });

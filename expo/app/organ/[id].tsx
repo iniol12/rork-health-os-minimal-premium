@@ -4,7 +4,8 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { X, TrendingUp, TrendingDown, Minus } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
-import colors, { getStatusColor, getStatusMuted } from '@/constants/colors';
+import { useTheme } from '@/contexts/ThemeContext';
+import { getStatusColor, getStatusMuted } from '@/constants/colors';
 import { getOrganById } from '@/mocks/organData';
 import ScoreDisplay from '@/components/ScoreDisplay';
 import MetricFlashcard from '@/components/MetricFlashcard';
@@ -15,6 +16,7 @@ export default function OrganDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
 
@@ -46,30 +48,30 @@ export default function OrganDetailScreen() {
 
   if (!organ) {
     return (
-      <View style={[styles.container, { paddingTop: insets.top }]}>
-        <Text style={styles.errorText}>Organ not found</Text>
+      <View style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.bg }]}>
+        <Text style={[styles.errorText, { color: colors.textSecondary }]}>Organ not found</Text>
       </View>
     );
   }
 
-  const statusColor = getStatusColor(organ.status);
-  const statusBg = getStatusMuted(organ.status);
+  const statusColor = getStatusColor(organ.status, colors);
+  const statusBg = getStatusMuted(organ.status, colors);
   const trendPositive = organ.trend > 0;
   const trendNeutral = organ.trend === 0;
   const statusLabel = organ.status === 'strong' ? 'Strong' : organ.status === 'watch' ? 'Needs watching' : 'Needs attention';
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.bg }]}>
       <View style={styles.handleBar}>
-        <View style={styles.handle} />
+        <View style={[styles.handle, { backgroundColor: colors.border }]} />
       </View>
 
       <View style={styles.topBar}>
-        <Text style={styles.topBarTitle}>{organ.name}</Text>
+        <Text style={[styles.topBarTitle, { color: colors.textPrimary }]}>{organ.name}</Text>
         <TouchableOpacity
           testID="close-button"
           onPress={handleClose}
-          style={styles.closeButton}
+          style={[styles.closeButton, { backgroundColor: colors.card, borderColor: colors.borderSubtle }]}
           activeOpacity={0.7}
         >
           <X size={18} color={colors.textSecondary} />
@@ -105,31 +107,31 @@ export default function OrganDetailScreen() {
           </View>
 
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Results</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Results</Text>
             {organ.metrics.map((metric) => (
               <MetricFlashcard key={metric.id} metric={metric} />
             ))}
           </View>
 
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Contributors</Text>
-            <Text style={styles.sectionSubtitle}>What's driving your score</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Contributors</Text>
+            <Text style={[styles.sectionSubtitle, { color: colors.textTertiary }]}>What's driving your score</Text>
             {organ.contributors.map((contributor) => (
               <ContributorCard key={contributor.id} contributor={contributor} />
             ))}
           </View>
 
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Suggestions</Text>
-            <Text style={styles.sectionSubtitle}>Actions to improve</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Suggestions</Text>
+            <Text style={[styles.sectionSubtitle, { color: colors.textTertiary }]}>Actions to improve</Text>
             {organ.suggestions.map((suggestion, index) => (
               <SuggestionCard key={suggestion.id} suggestion={suggestion} index={index} />
             ))}
           </View>
 
-          <View style={styles.summarySection}>
-            <Text style={styles.summaryTitle}>Summary</Text>
-            <Text style={styles.summaryText}>{organ.summary}</Text>
+          <View style={[styles.summarySection, { backgroundColor: colors.card, borderColor: colors.borderSubtle }]}>
+            <Text style={[styles.summaryTitle, { color: colors.textPrimary }]}>Summary</Text>
+            <Text style={[styles.summaryBody, { color: colors.textSecondary }]}>{organ.summary}</Text>
           </View>
 
           <View style={{ height: 40 }} />
@@ -142,7 +144,6 @@ export default function OrganDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.bg,
   },
   handleBar: {
     alignItems: 'center' as const,
@@ -152,7 +153,6 @@ const styles = StyleSheet.create({
     width: 36,
     height: 4,
     borderRadius: 2,
-    backgroundColor: colors.border,
   },
   topBar: {
     flexDirection: 'row' as const,
@@ -164,18 +164,15 @@ const styles = StyleSheet.create({
   topBarTitle: {
     fontSize: 18,
     fontWeight: '700' as const,
-    color: colors.textPrimary,
     letterSpacing: -0.3,
   },
   closeButton: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: colors.card,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
     borderWidth: 1,
-    borderColor: colors.borderSubtle,
   },
   scrollContent: {
     paddingHorizontal: 16,
@@ -214,39 +211,32 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: '700' as const,
-    color: colors.textPrimary,
     letterSpacing: -0.2,
     marginBottom: 4,
   },
   sectionSubtitle: {
     fontSize: 12,
-    color: colors.textTertiary,
     marginBottom: 10,
   },
   summarySection: {
-    backgroundColor: colors.card,
     borderRadius: 14,
     padding: 16,
     borderWidth: 1,
-    borderColor: colors.borderSubtle,
     marginBottom: 16,
   },
   summaryTitle: {
     fontSize: 14,
     fontWeight: '700' as const,
-    color: colors.textPrimary,
     letterSpacing: -0.2,
     marginBottom: 8,
   },
-  summaryText: {
+  summaryBody: {
     fontSize: 14,
-    color: colors.textSecondary,
     lineHeight: 22,
     letterSpacing: 0.1,
   },
   errorText: {
     fontSize: 16,
-    color: colors.textSecondary,
     textAlign: 'center' as const,
     marginTop: 100,
   },

@@ -1,15 +1,17 @@
-import React, { useRef, useEffect } from 'react';
-import { Animated, StyleSheet, View, Text } from 'react-native';
+import React, { useRef, useEffect, useCallback } from 'react';
+import { Animated, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import colors from '@/constants/colors';
+import { Sun, Moon } from 'lucide-react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 import { getOverallScore } from '@/mocks/organData';
 import BodySilhouette from '@/components/BodySilhouette';
 
 export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { colors, isDark, toggleTheme } = useTheme();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(20)).current;
   const overallScore = getOverallScore();
@@ -29,27 +31,41 @@ export default function HomeScreen() {
     ]).start();
   }, [fadeAnim, slideAnim]);
 
-  const handleOrganPress = (organId: string) => {
+  const handleOrganPress = useCallback((organId: string) => {
     console.log('[HomeScreen] Navigating to organ:', organId);
     router.push({ pathname: '/organ/[id]' as any, params: { id: organId } });
-  };
+  }, [router]);
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.bg }]}>
       <LinearGradient
-        colors={['#06060A', '#08080E', '#06060A']}
+        colors={[colors.bgGradient1, colors.bgGradient2, colors.bgGradient3] as any}
         style={StyleSheet.absoluteFill}
       />
 
       <Animated.View style={[styles.header, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
         <View style={styles.headerTop}>
           <View>
-            <Text style={styles.greeting}>Clariohealth</Text>
-            <Text style={styles.subtitle}>Your biological dashboard</Text>
+            <Text style={[styles.greeting, { color: colors.textPrimary }]}>Clariohealth</Text>
+            <Text style={[styles.subtitle, { color: colors.textTertiary }]}>Your biological dashboard</Text>
           </View>
-          <View style={styles.overallBadge}>
-            <Text style={styles.overallScore}>{overallScore}</Text>
-            <Text style={styles.overallLabel}>Overall</Text>
+          <View style={styles.headerRight}>
+            <TouchableOpacity
+              onPress={toggleTheme}
+              style={[styles.themeToggle, { backgroundColor: colors.overlayLight, borderColor: colors.overlayMedium }]}
+              activeOpacity={0.7}
+              testID="theme-toggle"
+            >
+              {isDark ? (
+                <Sun size={16} color={colors.textSecondary} />
+              ) : (
+                <Moon size={16} color={colors.textSecondary} />
+              )}
+            </TouchableOpacity>
+            <View style={[styles.overallBadge, { backgroundColor: colors.overlayLight, borderColor: colors.overlayMedium }]}>
+              <Text style={[styles.overallScore, { color: colors.textPrimary }]}>{overallScore}</Text>
+              <Text style={[styles.overallLabel, { color: colors.textTertiary }]}>Overall</Text>
+            </View>
           </View>
         </View>
       </Animated.View>
@@ -59,9 +75,9 @@ export default function HomeScreen() {
       </View>
 
       <Animated.View style={[styles.hintContainer, { opacity: fadeAnim }]}>
-        <View style={styles.hintPill}>
-          <View style={styles.hintDot} />
-          <Text style={styles.hintText}>Tap an organ to explore</Text>
+        <View style={[styles.hintPill, { backgroundColor: colors.overlayLight }]}>
+          <View style={[styles.hintDot, { backgroundColor: colors.accent + '99' }]} />
+          <Text style={[styles.hintText, { color: colors.textTertiary }]}>Tap an organ to explore</Text>
         </View>
       </Animated.View>
     </View>
@@ -71,7 +87,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#06060A',
   },
   header: {
     paddingHorizontal: 20,
@@ -83,37 +98,44 @@ const styles = StyleSheet.create({
     alignItems: 'center' as const,
     justifyContent: 'space-between' as const,
   },
+  headerRight: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: 8,
+  },
+  themeToggle: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    borderWidth: 1,
+  },
   greeting: {
     fontSize: 22,
     fontWeight: '700' as const,
-    color: colors.textPrimary,
     letterSpacing: -0.5,
   },
   subtitle: {
     fontSize: 13,
-    color: colors.textTertiary,
     fontWeight: '500' as const,
     marginTop: 2,
     letterSpacing: 0.1,
   },
   overallBadge: {
-    backgroundColor: 'rgba(255,255,255,0.04)',
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 8,
     alignItems: 'center' as const,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.06)',
   },
   overallScore: {
     fontSize: 20,
     fontWeight: '700' as const,
-    color: colors.textPrimary,
     letterSpacing: -0.5,
   },
   overallLabel: {
     fontSize: 10,
-    color: colors.textTertiary,
     fontWeight: '500' as const,
     marginTop: 1,
     textTransform: 'uppercase' as const,
@@ -132,7 +154,6 @@ const styles = StyleSheet.create({
   hintPill: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
-    backgroundColor: 'rgba(255,255,255,0.04)',
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 20,
@@ -142,11 +163,9 @@ const styles = StyleSheet.create({
     width: 5,
     height: 5,
     borderRadius: 2.5,
-    backgroundColor: 'rgba(96,165,250,0.6)',
   },
   hintText: {
     fontSize: 12,
-    color: colors.textTertiary,
     fontWeight: '500' as const,
     letterSpacing: 0.2,
   },

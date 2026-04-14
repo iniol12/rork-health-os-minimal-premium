@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, View, Text } from 'react-native';
 import { Zap, ArrowUpRight } from 'lucide-react-native';
-import colors from '@/constants/colors';
+import { useTheme } from '@/contexts/ThemeContext';
 import { Suggestion } from '@/mocks/organData';
 
 interface SuggestionCardProps {
@@ -9,25 +9,27 @@ interface SuggestionCardProps {
   index: number;
 }
 
-function getDifficultyColor(difficulty: Suggestion['difficulty']): string {
-  switch (difficulty) {
-    case 'easy': return colors.green;
-    case 'medium': return colors.yellow;
-    case 'hard': return colors.red;
-  }
-}
-
-function getDifficultyBg(difficulty: Suggestion['difficulty']): string {
-  switch (difficulty) {
-    case 'easy': return colors.greenMuted;
-    case 'medium': return colors.yellowMuted;
-    case 'hard': return colors.redMuted;
-  }
-}
-
 export default function SuggestionCard({ suggestion, index }: SuggestionCardProps) {
+  const { colors } = useTheme();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(12)).current;
+
+  function getDifficultyColor(difficulty: Suggestion['difficulty']): string {
+    switch (difficulty) {
+      case 'easy': return colors.green;
+      case 'medium': return colors.yellow;
+      case 'hard': return colors.red;
+    }
+  }
+
+  function getDifficultyBg(difficulty: Suggestion['difficulty']): string {
+    switch (difficulty) {
+      case 'easy': return colors.greenMuted;
+      case 'medium': return colors.yellowMuted;
+      case 'hard': return colors.redMuted;
+    }
+  }
+
   const diffColor = getDifficultyColor(suggestion.difficulty);
   const diffBg = getDifficultyBg(suggestion.difficulty);
 
@@ -52,19 +54,19 @@ export default function SuggestionCard({ suggestion, index }: SuggestionCardProp
   return (
     <Animated.View
       testID={`suggestion-${suggestion.id}`}
-      style={[styles.card, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}
+      style={[styles.card, { backgroundColor: colors.card, borderColor: colors.borderSubtle, opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}
     >
       <View style={styles.header}>
-        <View style={styles.iconWrap}>
+        <View style={[styles.iconWrap, { backgroundColor: colors.blueMuted }]}>
           <Zap size={14} color={colors.accent} />
         </View>
-        <Text style={styles.title}>{suggestion.title}</Text>
+        <Text style={[styles.title, { color: colors.textPrimary }]}>{suggestion.title}</Text>
       </View>
-      <Text style={styles.description}>{suggestion.description}</Text>
+      <Text style={[styles.description, { color: colors.textSecondary }]}>{suggestion.description}</Text>
       <View style={styles.footer}>
         <View style={styles.impactRow}>
           <ArrowUpRight size={12} color={colors.green} />
-          <Text style={styles.impactText}>{suggestion.impact}</Text>
+          <Text style={[styles.impactText, { color: colors.green }]}>{suggestion.impact}</Text>
         </View>
         <View style={[styles.diffBadge, { backgroundColor: diffBg }]}>
           <Text style={[styles.diffText, { color: diffColor }]}>{suggestion.difficulty}</Text>
@@ -76,12 +78,10 @@ export default function SuggestionCard({ suggestion, index }: SuggestionCardProp
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.card,
     borderRadius: 12,
     padding: 14,
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: colors.borderSubtle,
   },
   header: {
     flexDirection: 'row' as const,
@@ -93,20 +93,17 @@ const styles = StyleSheet.create({
     width: 26,
     height: 26,
     borderRadius: 7,
-    backgroundColor: colors.blueMuted,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
   },
   title: {
     fontSize: 15,
-    color: colors.textPrimary,
     fontWeight: '600' as const,
     letterSpacing: -0.2,
     flex: 1,
   },
   description: {
     fontSize: 13,
-    color: colors.textSecondary,
     lineHeight: 18,
     marginLeft: 34,
     marginBottom: 10,
@@ -124,7 +121,6 @@ const styles = StyleSheet.create({
   },
   impactText: {
     fontSize: 12,
-    color: colors.green,
     fontWeight: '500' as const,
   },
   diffBadge: {

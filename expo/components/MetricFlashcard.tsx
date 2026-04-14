@@ -2,14 +2,15 @@ import React, { useRef, useState, useCallback } from 'react';
 import { Animated, StyleSheet, TouchableOpacity, View, Text, Platform, LayoutAnimation } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { ChevronDown } from 'lucide-react-native';
-import colors from '@/constants/colors';
+import { useTheme } from '@/contexts/ThemeContext';
 import { OrganMetric } from '@/mocks/organData';
+import { ThemeColors } from '@/constants/colors';
 
 interface MetricFlashcardProps {
   metric: OrganMetric;
 }
 
-function getMetricStatusColor(status: OrganMetric['status']): string {
+function getMetricStatusColor(status: OrganMetric['status'], colors: ThemeColors): string {
   switch (status) {
     case 'optimal': return colors.green;
     case 'normal': return colors.green;
@@ -19,7 +20,7 @@ function getMetricStatusColor(status: OrganMetric['status']): string {
   }
 }
 
-function getMetricStatusBg(status: OrganMetric['status']): string {
+function getMetricStatusBg(status: OrganMetric['status'], colors: ThemeColors): string {
   switch (status) {
     case 'optimal': return colors.greenMuted;
     case 'normal': return colors.greenMuted;
@@ -30,10 +31,11 @@ function getMetricStatusBg(status: OrganMetric['status']): string {
 }
 
 export default function MetricFlashcard({ metric }: MetricFlashcardProps) {
+  const { colors } = useTheme();
   const [expanded, setExpanded] = useState<boolean>(false);
   const rotateAnim = useRef(new Animated.Value(0)).current;
-  const statusColor = getMetricStatusColor(metric.status);
-  const statusBg = getMetricStatusBg(metric.status);
+  const statusColor = getMetricStatusColor(metric.status, colors);
+  const statusBg = getMetricStatusBg(metric.status, colors);
 
   const toggle = useCallback(() => {
     if (Platform.OS !== 'web') {
@@ -65,13 +67,17 @@ export default function MetricFlashcard({ metric }: MetricFlashcardProps) {
       testID={`metric-${metric.id}`}
       onPress={toggle}
       activeOpacity={0.8}
-      style={[styles.card, expanded && styles.cardExpanded]}
+      style={[
+        styles.card,
+        { backgroundColor: colors.card, borderColor: colors.borderSubtle },
+        expanded && { backgroundColor: colors.cardHover, borderColor: colors.border },
+      ]}
     >
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <Text style={styles.metricName}>{metric.name}</Text>
+          <Text style={[styles.metricName, { color: colors.textSecondary }]}>{metric.name}</Text>
           <View style={styles.valueRow}>
-            <Text style={styles.metricValue}>{metric.value}</Text>
+            <Text style={[styles.metricValue, { color: colors.textPrimary }]}>{metric.value}</Text>
             <View style={[styles.statusBadge, { backgroundColor: statusBg }]}>
               <Text style={[styles.statusText, { color: statusColor }]}>{metric.statusLabel}</Text>
             </View>
@@ -83,18 +89,18 @@ export default function MetricFlashcard({ metric }: MetricFlashcardProps) {
       </View>
 
       {expanded && (
-        <View style={styles.content}>
+        <View style={[styles.content, { borderTopColor: colors.border }]}>
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>What is this?</Text>
-            <Text style={styles.sectionBody}>{metric.whatIsThis}</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textTertiary }]}>What is this?</Text>
+            <Text style={[styles.sectionBody, { color: colors.textSecondary }]}>{metric.whatIsThis}</Text>
           </View>
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>What yours means</Text>
-            <Text style={styles.sectionBody}>{metric.whatYoursMeans}</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textTertiary }]}>What yours means</Text>
+            <Text style={[styles.sectionBody, { color: colors.textSecondary }]}>{metric.whatYoursMeans}</Text>
           </View>
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Why it matters</Text>
-            <Text style={styles.sectionBody}>{metric.whyItMatters}</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textTertiary }]}>Why it matters</Text>
+            <Text style={[styles.sectionBody, { color: colors.textSecondary }]}>{metric.whyItMatters}</Text>
           </View>
         </View>
       )}
@@ -104,17 +110,11 @@ export default function MetricFlashcard({ metric }: MetricFlashcardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.card,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: colors.borderSubtle,
-  },
-  cardExpanded: {
-    backgroundColor: colors.cardHover,
-    borderColor: colors.border,
   },
   header: {
     flexDirection: 'row' as const,
@@ -127,7 +127,6 @@ const styles = StyleSheet.create({
   },
   metricName: {
     fontSize: 13,
-    color: colors.textSecondary,
     fontWeight: '500' as const,
     letterSpacing: 0.2,
     marginBottom: 4,
@@ -139,7 +138,6 @@ const styles = StyleSheet.create({
   },
   metricValue: {
     fontSize: 17,
-    color: colors.textPrimary,
     fontWeight: '600' as const,
     letterSpacing: -0.3,
   },
@@ -157,14 +155,12 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingTop: 14,
     borderTopWidth: 1,
-    borderTopColor: colors.border,
   },
   section: {
     marginBottom: 14,
   },
   sectionTitle: {
     fontSize: 12,
-    color: colors.textTertiary,
     fontWeight: '600' as const,
     textTransform: 'uppercase' as const,
     letterSpacing: 0.6,
@@ -172,7 +168,6 @@ const styles = StyleSheet.create({
   },
   sectionBody: {
     fontSize: 14,
-    color: colors.textSecondary,
     lineHeight: 20,
     letterSpacing: 0.1,
   },

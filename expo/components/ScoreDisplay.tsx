@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { OrganStatus, getStatusColor, getStatusMuted } from '@/constants/colors';
-import colors from '@/constants/colors';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface ScoreDisplayProps {
   score: number;
@@ -12,9 +12,10 @@ interface ScoreDisplayProps {
 }
 
 export default function ScoreDisplay({ score, status, size = 120, strokeWidth = 6 }: ScoreDisplayProps) {
+  const { colors } = useTheme();
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const color = getStatusColor(status);
-  const mutedColor = getStatusMuted(status);
+  const color = getStatusColor(status, colors);
+  const mutedColor = getStatusMuted(status, colors);
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = (score / 100) * circumference;
@@ -56,7 +57,7 @@ export default function ScoreDisplay({ score, status, size = 120, strokeWidth = 
         <Animated.Text style={[styles.score, { color, fontSize: size * 0.3 }]}>
           {score}
         </Animated.Text>
-        <Animated.Text style={[styles.label, { fontSize: size * 0.1 }]}>
+        <Animated.Text style={[styles.label, { fontSize: size * 0.1, color: colors.textTertiary }]}>
           / 100
         </Animated.Text>
       </View>
@@ -81,7 +82,6 @@ const styles = StyleSheet.create({
     letterSpacing: -1,
   },
   label: {
-    color: colors.textTertiary,
     fontWeight: '500' as const,
     marginTop: -2,
   },

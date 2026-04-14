@@ -2,13 +2,15 @@ import React, { useRef, useEffect } from 'react';
 import { Animated, ScrollView, StyleSheet, View, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import colors, { getStatusColor } from '@/constants/colors';
+import { useTheme } from '@/contexts/ThemeContext';
+import { getStatusColor } from '@/constants/colors';
 import { organs, getOverallScore } from '@/mocks/organData';
 import OrganCard from '@/components/OrganCard';
 
 export default function InsightsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const overallScore = getOverallScore();
 
@@ -45,27 +47,27 @@ export default function InsightsScreen() {
   };
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.bg }]}>
       <Animated.View style={{ opacity: fadeAnim, flex: 1 }}>
         <View style={styles.header}>
-          <Text style={styles.title}>Insights</Text>
-          <Text style={styles.subtitle}>All organ systems</Text>
+          <Text style={[styles.title, { color: colors.textPrimary }]}>Insights</Text>
+          <Text style={[styles.subtitle, { color: colors.textTertiary }]}>All organ systems</Text>
         </View>
 
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.overallCard}>
+          <View style={[styles.overallCard, { backgroundColor: colors.card, borderColor: colors.borderSubtle }]}>
             <View style={styles.overallLeft}>
-              <Text style={styles.overallLabel}>Overall Health Score</Text>
-              <Text style={styles.overallDesc}>
+              <Text style={[styles.overallLabel, { color: colors.textPrimary }]}>Overall Health Score</Text>
+              <Text style={[styles.overallDesc, { color: colors.textTertiary }]}>
                 Across {organs.length} organ systems
               </Text>
             </View>
             <View style={styles.overallRight}>
-              <Text style={styles.overallScore}>{overallScore}</Text>
-              <Text style={styles.overallMax}>/100</Text>
+              <Text style={[styles.overallScore, { color: colors.textPrimary }]}>{overallScore}</Text>
+              <Text style={[styles.overallMax, { color: colors.textTertiary }]}>/100</Text>
             </View>
           </View>
 
@@ -121,7 +123,6 @@ export default function InsightsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.bg,
   },
   header: {
     paddingHorizontal: 20,
@@ -131,12 +132,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: '700' as const,
-    color: colors.textPrimary,
     letterSpacing: -0.5,
   },
   subtitle: {
     fontSize: 13,
-    color: colors.textTertiary,
     fontWeight: '500' as const,
     marginTop: 2,
   },
@@ -144,14 +143,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   overallCard: {
-    backgroundColor: colors.card,
     borderRadius: 16,
     padding: 18,
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
     justifyContent: 'space-between' as const,
     borderWidth: 1,
-    borderColor: colors.borderSubtle,
     marginBottom: 14,
   },
   overallLeft: {
@@ -160,12 +157,10 @@ const styles = StyleSheet.create({
   overallLabel: {
     fontSize: 15,
     fontWeight: '600' as const,
-    color: colors.textPrimary,
     letterSpacing: -0.2,
   },
   overallDesc: {
     fontSize: 12,
-    color: colors.textTertiary,
     marginTop: 2,
   },
   overallRight: {
@@ -175,12 +170,10 @@ const styles = StyleSheet.create({
   overallScore: {
     fontSize: 36,
     fontWeight: '700' as const,
-    color: colors.textPrimary,
     letterSpacing: -1,
   },
   overallMax: {
     fontSize: 14,
-    color: colors.textTertiary,
     fontWeight: '500' as const,
     marginLeft: 2,
   },

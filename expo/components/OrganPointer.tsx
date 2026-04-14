@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { OrganStatus, getStatusColor, getStatusSoft } from '@/constants/colors';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface OrganPointerProps {
   x: number;
@@ -11,10 +12,11 @@ interface OrganPointerProps {
 }
 
 export default function OrganPointer({ x, y, status, name, onPress }: OrganPointerProps) {
+  const { colors } = useTheme();
   const pulseAnim = useRef(new Animated.Value(0.6)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
-  const color = getStatusColor(status);
-  const softColor = getStatusSoft(status);
+  const color = getStatusColor(status, colors);
+  const softColor = getStatusSoft(status, colors);
 
   useEffect(() => {
     const pulse = Animated.loop(

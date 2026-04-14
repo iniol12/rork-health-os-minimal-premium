@@ -1,9 +1,11 @@
 import { Tabs } from "expo-router";
 import { Activity, BarChart3, Sparkles } from "lucide-react-native";
 import React from "react";
-import colors from "@/constants/colors";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function TabLayout() {
+  const { colors } = useTheme();
+
   return (
     <Tabs
       screenOptions={{
