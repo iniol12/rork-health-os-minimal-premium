@@ -117,6 +117,18 @@ export default function AskScreen() {
   const msg2Slide = useRef(new Animated.Value(16)).current;
   const resp2Opacity = useRef(new Animated.Value(0)).current;
   const resp2Slide = useRef(new Animated.Value(16)).current;
+  const msg3Opacity = useRef(new Animated.Value(0)).current;
+  const msg3Slide = useRef(new Animated.Value(16)).current;
+  const resp3Opacity = useRef(new Animated.Value(0)).current;
+  const resp3Slide = useRef(new Animated.Value(16)).current;
+  const msg4Opacity = useRef(new Animated.Value(0)).current;
+  const msg4Slide = useRef(new Animated.Value(16)).current;
+  const resp4Opacity = useRef(new Animated.Value(0)).current;
+  const resp4Slide = useRef(new Animated.Value(16)).current;
+  const msg5Opacity = useRef(new Animated.Value(0)).current;
+  const msg5Slide = useRef(new Animated.Value(16)).current;
+  const resp5Opacity = useRef(new Animated.Value(0)).current;
+  const resp5Slide = useRef(new Animated.Value(16)).current;
 
   useEffect(() => {
     const anim = (o: Animated.Value, s: Animated.Value, delay: number) =>
@@ -131,8 +143,14 @@ export default function AskScreen() {
       anim(resp1Opacity, resp1Slide, 800),
       anim(msg2Opacity, msg2Slide, 1600),
       anim(resp2Opacity, resp2Slide, 2100),
+      anim(msg3Opacity, msg3Slide, 2900),
+      anim(resp3Opacity, resp3Slide, 3400),
+      anim(msg4Opacity, msg4Slide, 4200),
+      anim(resp4Opacity, resp4Slide, 4700),
+      anim(msg5Opacity, msg5Slide, 5500),
+      anim(resp5Opacity, resp5Slide, 6000),
     ]).start();
-  }, [fadeAnim, slideAnim, msg1Opacity, msg1Slide, resp1Opacity, resp1Slide, msg2Opacity, msg2Slide, resp2Opacity, resp2Slide]);
+  }, [fadeAnim, slideAnim, msg1Opacity, msg1Slide, resp1Opacity, resp1Slide, msg2Opacity, msg2Slide, resp2Opacity, resp2Slide, msg3Opacity, msg3Slide, resp3Opacity, resp3Slide, msg4Opacity, msg4Slide, resp4Opacity, resp4Slide, msg5Opacity, msg5Slide, resp5Opacity, resp5Slide]);
 
   const negativeContextBg = isDark ? 'rgba(251,191,36,0.06)' : 'rgba(217,119,6,0.06)';
   const negativeContextBorder = isDark ? 'rgba(251,191,36,0.15)' : 'rgba(217,119,6,0.15)';
@@ -145,6 +163,11 @@ export default function AskScreen() {
   const positiveContextTextColor = isDark ? 'rgba(52,211,153,0.85)' : 'rgba(5,150,105,0.9)';
 
   const positiveCardBorder = isDark ? 'rgba(52,211,153,0.1)' : 'rgba(5,150,105,0.1)';
+
+  const neutralContextBg = isDark ? 'rgba(96,165,250,0.06)' : 'rgba(37,99,235,0.06)';
+  const neutralContextBorder = isDark ? 'rgba(96,165,250,0.15)' : 'rgba(37,99,235,0.15)';
+  const neutralContextIconColor = isDark ? '#60A5FA' : '#2563EB';
+  const neutralContextTextColor = isDark ? 'rgba(96,165,250,0.88)' : 'rgba(37,99,235,0.9)';
 
   const inputFadeGradient = isDark
     ? ['transparent', 'rgba(6,6,10,0.96)', colors.bg]
@@ -276,6 +299,167 @@ export default function AskScreen() {
               <SuggestionChip colors={colors} label="Best time to eat this?" delay={2200} />
               <SuggestionChip colors={colors} label="Will this help sleep?" delay={2350} />
               <SuggestionChip colors={colors} label="Ideal portion for my goals?" delay={2500} />
+            </View>
+          </View>
+        </Animated.View>
+
+        <Animated.View style={[styles.userRow, { opacity: msg3Opacity, transform: [{ translateY: msg3Slide }] }]}>
+          <View style={styles.userStack}>
+            <View style={[styles.userBubble, { backgroundColor: colors.userBubbleBg, borderColor: colors.userBubbleBorder }]}>
+              <Text style={[styles.userText, { color: colors.textPrimary }]}>Why am I so tired in the afternoons even when I sleep 8 hours?</Text>
+            </View>
+          </View>
+        </Animated.View>
+
+        <Animated.View style={[styles.aiRow, { opacity: resp3Opacity, transform: [{ translateY: resp3Slide }] }]}>
+          <View style={styles.aiModelTag}>
+            <Text style={[styles.aiModelText, { color: colors.textTertiary }]}>Clariohealth · Recovery + Energy Analysis</Text>
+          </View>
+          <View style={[styles.aiCard, { backgroundColor: colors.card, borderColor: colors.borderSubtle, shadowColor: colors.shadowColor }]}>
+            <View style={styles.summaryRow}>
+              <View style={[styles.summaryAccent, { backgroundColor: colors.yellow }]} />
+              <Text style={[styles.summaryText, { color: colors.textPrimary }]}>
+                You're sleeping long — but not recovering. Deep sleep and iron are the bottleneck.
+              </Text>
+            </View>
+
+            <View style={[styles.divider, { backgroundColor: colors.borderSubtle }]} />
+
+            <Text style={[styles.sectionLabel, { color: colors.textTertiary }]}>WEARABLE DATA · LAST 7 NIGHTS</Text>
+            <BulletRow colors={colors} label="Sleep duration" value="8h 12m avg — on target" sentiment="positive" />
+            <BulletRow colors={colors} label="Deep sleep" value="42 min — 38% below your baseline" sentiment="negative" />
+            <BulletRow colors={colors} label="REM sleep" value="1h 08m — slightly low" sentiment="neutral" />
+            <BulletRow colors={colors} label="Overnight HRV" value="38 ms — down from 52 ms baseline" sentiment="negative" />
+            <BulletRow colors={colors} label="Resting HR" value="68 bpm — +6 bpm vs. your norm" sentiment="negative" />
+
+            <View style={[styles.divider, { backgroundColor: colors.borderSubtle }]} />
+
+            <Text style={[styles.sectionLabel, { color: colors.textTertiary }]}>BLOODWORK CLUES</Text>
+            <BulletRow colors={colors} label="Ferritin" value="28 ng/mL — low-normal (iron deficit)" sentiment="negative" />
+            <BulletRow colors={colors} label="Vitamin D" value="24 ng/mL — deficient" sentiment="negative" />
+            <BulletRow colors={colors} label="Fasting glucose" value="98 mg/dL — borderline" sentiment="neutral" />
+            <BulletRow colors={colors} label="HbA1c" value="5.8% — post-lunch crash likely" sentiment="negative" />
+            <BulletRow colors={colors} label="TSH" value="2.1 mIU/L — normal" sentiment="positive" />
+
+            <View style={[styles.contextNote, { backgroundColor: neutralContextBg, borderColor: neutralContextBorder }]}>
+              <Text style={[styles.contextIcon, { color: neutralContextIconColor }]}>◎</Text>
+              <Text style={[styles.contextText, { color: neutralContextTextColor }]}>
+                Your 2–4 PM slump aligns with three signals: low deep sleep (oxygen debt), low ferritin (reduced oxygen transport), and a post-lunch glucose dip from your HbA1c trajectory. Total sleep time is a poor proxy for recovery — your wearable shows the real story.
+              </Text>
+            </View>
+
+            <View style={styles.chipsWrap}>
+              <SuggestionChip colors={colors} label="How do I raise deep sleep?" delay={3500} />
+              <SuggestionChip colors={colors} label="Should I supplement iron?" delay={3650} />
+              <SuggestionChip colors={colors} label="Best afternoon snack for me?" delay={3800} />
+            </View>
+          </View>
+        </Animated.View>
+
+        <Animated.View style={[styles.userRow, { opacity: msg4Opacity, transform: [{ translateY: msg4Slide }] }]}>
+          <View style={styles.userStack}>
+            <View style={[styles.userBubble, { backgroundColor: colors.userBubbleBg, borderColor: colors.userBubbleBorder }]}>
+              <Text style={[styles.userText, { color: colors.textPrimary }]}>How is my sleep quality affecting my HRV?</Text>
+            </View>
+          </View>
+        </Animated.View>
+
+        <Animated.View style={[styles.aiRow, { opacity: resp4Opacity, transform: [{ translateY: resp4Slide }] }]}>
+          <View style={styles.aiModelTag}>
+            <Text style={[styles.aiModelText, { color: colors.textTertiary }]}>Clariohealth · Autonomic Correlation</Text>
+          </View>
+          <View style={[styles.aiCard, { backgroundColor: colors.card, borderColor: colors.borderSubtle, shadowColor: colors.shadowColor }]}>
+            <View style={styles.summaryRow}>
+              <View style={[styles.summaryAccent, { backgroundColor: colors.red }]} />
+              <Text style={[styles.summaryText, { color: colors.textPrimary }]}>
+                Strong negative correlation — poor sleep drops your HRV by 28% the next day.
+              </Text>
+            </View>
+
+            <View style={[styles.divider, { backgroundColor: colors.borderSubtle }]} />
+
+            <Text style={[styles.sectionLabel, { color: colors.textTertiary }]}>14-DAY WEARABLE CORRELATION</Text>
+            <BulletRow colors={colors} label="Baseline HRV" value="52 ms (30-day rolling)" sentiment="neutral" />
+            <BulletRow colors={colors} label="Good sleep nights" value="HRV 54 ms · RHR 62 bpm" sentiment="positive" />
+            <BulletRow colors={colors} label="Poor sleep nights" value="HRV 31 ms · RHR 68 bpm" sentiment="negative" />
+            <BulletRow colors={colors} label={'Deep sleep <45 min'} value="HRV drops avg 18 ms next day" sentiment="negative" />
+            <BulletRow colors={colors} label={'Late meals (>9pm)'} value="HRV –12 ms · resp rate +1.4" sentiment="negative" />
+
+            <View style={[styles.divider, { backgroundColor: colors.borderSubtle }]} />
+
+            <Text style={[styles.sectionLabel, { color: colors.textTertiary }]}>BLOODWORK REINFORCING THE PATTERN</Text>
+            <BulletRow colors={colors} label="Morning cortisol" value="21 µg/dL — upper range" sentiment="negative" />
+            <BulletRow colors={colors} label="hs-CRP" value="1.8 mg/L — mild inflammation" sentiment="negative" />
+            <BulletRow colors={colors} label="Magnesium (RBC)" value="4.6 mg/dL — low-normal" sentiment="negative" />
+            <BulletRow colors={colors} label="Testosterone" value="540 ng/dL — healthy" sentiment="positive" />
+
+            <View style={[styles.contextNote, { backgroundColor: negativeContextBg, borderColor: negativeContextBorder }]}>
+              <Text style={[styles.contextIcon, { color: negativeContextIconColor }]}>◎</Text>
+              <Text style={[styles.contextText, { color: negativeContextTextColor }]}>
+                Fragmented sleep is keeping your sympathetic system elevated overnight. High-normal cortisol, low magnesium, and short deep sleep are suppressing vagal tone — exactly what HRV measures. Fix deep sleep first; HRV follows within ~10 days.
+              </Text>
+            </View>
+
+            <View style={styles.chipsWrap}>
+              <SuggestionChip colors={colors} label="Show me my HRV trend" delay={4800} />
+              <SuggestionChip colors={colors} label="Magnesium dose + timing?" delay={4950} />
+              <SuggestionChip colors={colors} label="Ideal last-meal cutoff?" delay={5100} />
+            </View>
+          </View>
+        </Animated.View>
+
+        <Animated.View style={[styles.userRow, { opacity: msg5Opacity, transform: [{ translateY: msg5Slide }] }]}>
+          <View style={styles.userStack}>
+            <View style={[styles.userBubble, { backgroundColor: colors.userBubbleBg, borderColor: colors.userBubbleBorder }]}>
+              <Text style={[styles.userText, { color: colors.textPrimary }]}>I want to have more energy by next month — what should I change?</Text>
+            </View>
+          </View>
+        </Animated.View>
+
+        <Animated.View style={[styles.aiRow, { opacity: resp5Opacity, transform: [{ translateY: resp5Slide }] }]}>
+          <View style={styles.aiModelTag}>
+            <Text style={[styles.aiModelText, { color: colors.textTertiary }]}>Clariohealth · 30-Day Protocol</Text>
+          </View>
+          <View style={[styles.aiCard, { backgroundColor: colors.card, borderColor: positiveCardBorder, shadowColor: colors.shadowColor }]}>
+            <View style={styles.summaryRow}>
+              <View style={[styles.summaryAccent, { backgroundColor: colors.green }]} />
+              <Text style={[styles.summaryText, { color: colors.textPrimary }]}>
+                Based on your labs + wearable data, 3 targeted shifts should lift energy 30–40% in 4 weeks.
+              </Text>
+            </View>
+
+            <View style={[styles.divider, { backgroundColor: colors.borderSubtle }]} />
+
+            <Text style={[styles.sectionLabel, { color: colors.textTertiary }]}>PRIORITY 1 · CORRECT DEFICIENCIES</Text>
+            <BulletRow colors={colors} label="Vitamin D3" value="5,000 IU/day · retest in 6 weeks" sentiment="positive" />
+            <BulletRow colors={colors} label="Iron bisglycinate" value="25 mg w/ vit C · target ferritin 70+" sentiment="positive" />
+            <BulletRow colors={colors} label="Magnesium glycinate" value="300 mg · 1h before bed" sentiment="positive" />
+
+            <View style={[styles.divider, { backgroundColor: colors.borderSubtle }]} />
+
+            <Text style={[styles.sectionLabel, { color: colors.textTertiary }]}>PRIORITY 2 · FIX DEEP SLEEP</Text>
+            <BulletRow colors={colors} label="Last meal" value="Finish by 7:30 PM — protects deep sleep" sentiment="positive" />
+            <BulletRow colors={colors} label="Bedroom temp" value="65–67°F — confirmed by your HRV nights" sentiment="positive" />
+            <BulletRow colors={colors} label="Alcohol" value="Cap at 2/week — –22% deep sleep per drink" sentiment="neutral" />
+
+            <View style={[styles.divider, { backgroundColor: colors.borderSubtle }]} />
+
+            <Text style={[styles.sectionLabel, { color: colors.textTertiary }]}>PRIORITY 3 · METABOLIC + AEROBIC BASE</Text>
+            <BulletRow colors={colors} label="Zone 2 cardio" value="3×/week · 35 min — lifts HRV baseline" sentiment="positive" />
+            <BulletRow colors={colors} label="Breakfast" value="30g protein — fixes afternoon crash" sentiment="positive" />
+            <BulletRow colors={colors} label="Morning sunlight" value="10 min within 30 min of waking" sentiment="positive" />
+
+            <View style={[styles.contextNote, { backgroundColor: positiveContextBg, borderColor: positiveContextBorder }]}>
+              <Text style={[styles.contextIcon, { color: positiveContextIconColor }]}>◎</Text>
+              <Text style={[styles.contextText, { color: positiveContextTextColor }]}>
+                Projected in 30 days: HRV +8–12 ms · Deep sleep +25% · Afternoon fatigue –45% · Ferritin → 55 ng/mL · HbA1c trending to 5.5%. I'll re-check in 2 weeks and adjust.
+              </Text>
+            </View>
+
+            <View style={styles.chipsWrap}>
+              <SuggestionChip colors={colors} label="Add this to my daily plan" delay={6100} />
+              <SuggestionChip colors={colors} label="Which labs to retest?" delay={6250} />
+              <SuggestionChip colors={colors} label="Remind me at 7:30 PM daily" delay={6400} />
             </View>
           </View>
         </Animated.View>
