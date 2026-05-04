@@ -5,10 +5,10 @@ import { darkColors, lightColors, ThemeColors } from '@/constants/colors';
 
 export type ThemeMode = 'dark' | 'light';
 
-const THEME_STORAGE_KEY = 'clariohealth_theme';
+const THEME_STORAGE_KEY = 'clariohealth_theme_v2';
 
 export const [ThemeProvider, useTheme] = createContextHook(() => {
-  const [mode, setMode] = useState<ThemeMode>('dark');
+  const [mode, setMode] = useState<ThemeMode>('light');
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   useEffect(() => {

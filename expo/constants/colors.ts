@@ -109,15 +109,15 @@ export const darkColors: ThemeColors = {
 };
 
 export const lightColors: ThemeColors = {
-  bg: '#F6F6F8',
-  bgGradient1: '#F0F0F4',
-  bgGradient2: '#F6F6F8',
-  bgGradient3: '#F0F0F4',
+  bg: '#FFFFFF',
+  bgGradient1: '#FFFFFF',
+  bgGradient2: '#FFFFFF',
+  bgGradient3: '#FFFFFF',
   surface: '#FFFFFF',
   card: '#FFFFFF',
-  cardHover: '#F0F0F4',
-  border: '#E0E0E6',
-  borderSubtle: '#EAEAEF',
+  cardHover: '#FAFAFC',
+  border: '#ECECF0',
+  borderSubtle: '#F2F2F5',
 
   textPrimary: '#111118',
   textSecondary: '#5C5C68',
@@ -141,16 +141,16 @@ export const lightColors: ThemeColors = {
 
   accent: '#2563EB',
 
-  bodyFill: '#E8E8EE',
-  bodyStroke: '#D4D4DC',
-  bodyHighlight: '#DCDCE4',
+  bodyFill: '#F4F4F7',
+  bodyStroke: '#E4E4EA',
+  bodyHighlight: '#EDEDF2',
 
   overlayLight: 'rgba(0,0,0,0.03)',
   overlayMedium: 'rgba(0,0,0,0.05)',
   overlayStrong: 'rgba(0,0,0,0.07)',
 
   inputBg: '#FFFFFF',
-  inputBorder: '#E0E0E6',
+  inputBorder: '#ECECF0',
 
   shadowColor: 'rgba(0,0,0,0.08)',
 
