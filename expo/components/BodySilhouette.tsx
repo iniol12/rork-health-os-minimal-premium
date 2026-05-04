@@ -8,7 +8,7 @@ interface BodySilhouetteProps {
   onOrganPress: (organId: string) => void;
 }
 
-const BODY_IMAGE_URI = 'https://r2-pub.rork.com/generated-images/0a627fcc-51e5-4b6e-96b6-f8aad2c7f86f.png';
+const BODY_IMAGE_URI = 'https://r2-pub.rork.com/generated-images/a4a69afc-6344-4b89-8f6c-c6b66a7c40a1.png';
 
 export default function BodySilhouette({ onOrganPress }: BodySilhouetteProps) {
   const { width: screenWidth } = useWindowDimensions();
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden' as const,
   },
   lightImageWrap: {
-    backgroundColor: 'rgba(0,0,0,0.04)',
+    backgroundColor: 'transparent',
     borderRadius: 24,
   },
   bodyImage: {
