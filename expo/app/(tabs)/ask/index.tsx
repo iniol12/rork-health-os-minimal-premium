@@ -88,13 +88,15 @@ function MiniBody({ highlight, colors }: MiniBodyProps) {
   const pos1 = isHeart ? { top: '28%' as const, left: '42%' as const } : { top: '52%' as const, left: '38%' as const };
   const pos2 = isHeart ? { top: '20%' as const, left: '47%' as const } : { top: '47%' as const, left: '44%' as const };
 
+  const silColor = colors.border;
+
   return (
     <View style={styles.miniBodyContainer}>
       <View style={styles.miniBodySilhouette}>
-        <View style={[styles.silHead, { backgroundColor: colors.textPrimary }]} />
-        <View style={[styles.silNeck, { backgroundColor: colors.textPrimary }]} />
-        <View style={[styles.silTorso, { backgroundColor: colors.textPrimary }]} />
-        <View style={[styles.silLegs, { backgroundColor: colors.textPrimary }]} />
+        <View style={[styles.silHead, { backgroundColor: silColor }]} />
+        <View style={[styles.silNeck, { backgroundColor: silColor }]} />
+        <View style={[styles.silTorso, { backgroundColor: silColor }]} />
+        <View style={[styles.silLegs, { backgroundColor: silColor }]} />
       </View>
       <Animated.View style={[styles.miniBodyGlow, pos1, { backgroundColor: glowColor, opacity: pulseAnim }]} />
       <Animated.View style={[styles.miniBodyGlow2, pos2, { backgroundColor: glowColor2, opacity: pulseAnim }]} />
@@ -677,7 +679,7 @@ const styles = StyleSheet.create({
   },
   miniBodySilhouette: {
     alignItems: 'center' as const,
-    opacity: 0.12,
+    opacity: 0.85,
   },
   silHead: {
     width: 16,
