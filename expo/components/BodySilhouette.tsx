@@ -8,7 +8,7 @@ interface BodySilhouetteProps {
   onOrganPress: (organId: string) => void;
 }
 
-const BODY_IMAGE_URI = 'https://r2-pub.rork.com/generated-images/0d759d70-e78c-45a9-b420-ff4a6021ca35.png';
+const BODY_IMAGE_URI = 'https://r2-pub.rork.com/generated-images/0a627fcc-51e5-4b6e-96b6-f8aad2c7f86f.png';
 
 export default function BodySilhouette({ onOrganPress }: BodySilhouetteProps) {
   const { width: screenWidth } = useWindowDimensions();
