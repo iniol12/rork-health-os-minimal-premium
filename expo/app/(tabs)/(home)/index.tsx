@@ -1,9 +1,9 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { Animated, StyleSheet, View, Text, TouchableOpacity, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Sun, Moon, TrendingUp } from 'lucide-react-native';
+import { Sun, Moon, TrendingUp, Eye, EyeOff } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { getOverallScore } from '@/mocks/organData';
 import BodySilhouette from '@/components/BodySilhouette';
@@ -15,6 +15,11 @@ export default function HomeScreen() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(20)).current;
   const overallScore = getOverallScore();
+  const [showPointers, setShowPointers] = useState<boolean>(false);
+
+  const togglePointers = useCallback(() => {
+    setShowPointers((prev) => !prev);
+  }, []);
 
   useEffect(() => {
     Animated.parallel([
@@ -99,13 +104,31 @@ export default function HomeScreen() {
       </Animated.View>
 
       <View style={styles.bodyContainer}>
-        <BodySilhouette onOrganPress={handleOrganPress} />
+        <BodySilhouette onOrganPress={handleOrganPress} showPointers={showPointers} />
       </View>
 
       <Animated.View style={[styles.hintContainer, { opacity: fadeAnim }]}>
-        <View style={[styles.hintPill, { backgroundColor: colors.overlayLight, borderColor: colors.borderSubtle }]}>
-          <Text style={[styles.hintText, { color: colors.textSecondary }]}>Tap any system to explore</Text>
-        </View>
+        <TouchableOpacity
+          onPress={togglePointers}
+          activeOpacity={0.8}
+          testID="toggle-pointers"
+          style={[
+            styles.hintPill,
+            {
+              backgroundColor: showPointers ? colors.green + '15' : colors.overlayLight,
+              borderColor: showPointers ? colors.green + '40' : colors.borderSubtle,
+            },
+          ]}
+        >
+          {showPointers ? (
+            <EyeOff size={13} color={colors.textSecondary} />
+          ) : (
+            <Eye size={13} color={colors.textSecondary} />
+          )}
+          <Text style={[styles.hintText, { color: colors.textSecondary }]}>
+            {showPointers ? 'Hide system markers' : 'Show system markers'}
+          </Text>
+        </TouchableOpacity>
       </Animated.View>
     </View>
   );
@@ -261,8 +284,11 @@ const styles = StyleSheet.create({
     paddingBottom: 14,
   },
   hintPill: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: 7,
     paddingHorizontal: 14,
-    paddingVertical: 7,
+    paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
   },

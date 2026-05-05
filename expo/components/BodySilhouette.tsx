@@ -6,11 +6,12 @@ import OrganPointer from './OrganPointer';
 
 interface BodySilhouetteProps {
   onOrganPress: (organId: string) => void;
+  showPointers?: boolean;
 }
 
 const BODY_IMAGE_URI = 'https://r2-pub.rork.com/generated-images/a4a69afc-6344-4b89-8f6c-c6b66a7c40a1.png';
 
-export default function BodySilhouette({ onOrganPress }: BodySilhouetteProps) {
+export default function BodySilhouette({ onOrganPress, showPointers = true }: BodySilhouetteProps) {
   const { width: screenWidth } = useWindowDimensions();
   const { isDark } = useTheme();
   const bodyWidth = Math.min(screenWidth * 0.82, 340);
@@ -42,6 +43,7 @@ export default function BodySilhouette({ onOrganPress }: BodySilhouetteProps) {
           name={organ.id}
           label={organ.name}
           score={organ.score}
+          visible={showPointers}
           onPress={() => onOrganPress(organ.id)}
         />
       ))}

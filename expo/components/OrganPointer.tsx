@@ -10,16 +10,27 @@ interface OrganPointerProps {
   name: string;
   label: string;
   score: number;
+  visible?: boolean;
   onPress: () => void;
 }
 
-export default function OrganPointer({ x, y, status, name, label, score, onPress }: OrganPointerProps) {
+export default function OrganPointer({ x, y, status, name, label, score, visible = true, onPress }: OrganPointerProps) {
   const { colors, isDark } = useTheme();
   const pulseAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const visibilityAnim = useRef(new Animated.Value(visible ? 1 : 0)).current;
   const color = getStatusColor(status, colors);
 
   useEffect(() => {
+    Animated.timing(visibilityAnim, {
+      toValue: visible ? 1 : 0,
+      duration: 280,
+      useNativeDriver: true,
+    }).start();
+  }, [visible, visibilityAnim]);
+
+  useEffect(() => {
+    if (!visible) return;
     const pulse = Animated.loop(
       Animated.sequence([
         Animated.timing(pulseAnim, { toValue: 1, duration: 2200, useNativeDriver: true }),
@@ -28,7 +39,7 @@ export default function OrganPointer({ x, y, status, name, label, score, onPress
     );
     pulse.start();
     return () => pulse.stop();
-  }, [pulseAnim]);
+  }, [pulseAnim, visible]);
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, { toValue: 0.94, useNativeDriver: true, friction: 6 }).start();
@@ -43,6 +54,8 @@ export default function OrganPointer({ x, y, status, name, label, score, onPress
   const chipBg = isDark ? 'rgba(20,20,24,0.78)' : 'rgba(255,255,255,0.92)';
   const chipBorder = isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.06)';
 
+  const chipScale = visibilityAnim.interpolate({ inputRange: [0, 1], outputRange: [0.7, 1] });
+
   return (
     <TouchableOpacity
       testID={`organ-pointer-${name}`}
@@ -51,6 +64,7 @@ export default function OrganPointer({ x, y, status, name, label, score, onPress
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       activeOpacity={1}
+      disabled={!visible}
     >
       <Animated.View
         pointerEvents="none"
@@ -58,7 +72,7 @@ export default function OrganPointer({ x, y, status, name, label, score, onPress
           styles.ring,
           {
             borderColor: color,
-            opacity: ringOpacity,
+            opacity: Animated.multiply(ringOpacity, visibilityAnim),
             transform: [{ scale: ringScale }],
           },
         ]}
@@ -70,7 +84,8 @@ export default function OrganPointer({ x, y, status, name, label, score, onPress
             backgroundColor: chipBg,
             borderColor: chipBorder,
             shadowColor: isDark ? '#000' : '#000',
-            transform: [{ scale: scaleAnim }],
+            opacity: visibilityAnim,
+            transform: [{ scale: Animated.multiply(scaleAnim, chipScale) }],
           },
         ]}
       >
