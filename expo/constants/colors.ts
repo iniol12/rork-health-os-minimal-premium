@@ -69,17 +69,17 @@ export const darkColors: ThemeColors = {
   textSecondary: '#8E8E9A',
   textTertiary: '#5C5C68',
 
-  green: '#34D399',
-  greenMuted: 'rgba(52, 211, 153, 0.12)',
-  greenSoft: 'rgba(52, 211, 153, 0.25)',
+  green: '#5EBE9A',
+  greenMuted: 'rgba(94, 190, 154, 0.10)',
+  greenSoft: 'rgba(94, 190, 154, 0.22)',
 
-  yellow: '#FBBF24',
-  yellowMuted: 'rgba(251, 191, 36, 0.12)',
-  yellowSoft: 'rgba(251, 191, 36, 0.25)',
+  yellow: '#D4A574',
+  yellowMuted: 'rgba(212, 165, 116, 0.10)',
+  yellowSoft: 'rgba(212, 165, 116, 0.22)',
 
-  red: '#F87171',
-  redMuted: 'rgba(248, 113, 113, 0.12)',
-  redSoft: 'rgba(248, 113, 113, 0.25)',
+  red: '#D88B82',
+  redMuted: 'rgba(216, 139, 130, 0.10)',
+  redSoft: 'rgba(216, 139, 130, 0.22)',
 
   blue: '#60A5FA',
   blueMuted: 'rgba(96, 165, 250, 0.12)',
@@ -123,17 +123,17 @@ export const lightColors: ThemeColors = {
   textSecondary: '#5C5C68',
   textTertiary: '#8E8E9A',
 
-  green: '#059669',
-  greenMuted: 'rgba(5, 150, 105, 0.1)',
-  greenSoft: 'rgba(5, 150, 105, 0.18)',
+  green: '#3B8F73',
+  greenMuted: 'rgba(59, 143, 115, 0.08)',
+  greenSoft: 'rgba(59, 143, 115, 0.16)',
 
-  yellow: '#D97706',
-  yellowMuted: 'rgba(217, 119, 6, 0.1)',
-  yellowSoft: 'rgba(217, 119, 6, 0.18)',
+  yellow: '#A67C4A',
+  yellowMuted: 'rgba(166, 124, 74, 0.08)',
+  yellowSoft: 'rgba(166, 124, 74, 0.16)',
 
-  red: '#DC2626',
-  redMuted: 'rgba(220, 38, 38, 0.08)',
-  redSoft: 'rgba(220, 38, 38, 0.15)',
+  red: '#B85C5C',
+  redMuted: 'rgba(184, 92, 92, 0.07)',
+  redSoft: 'rgba(184, 92, 92, 0.14)',
 
   blue: '#2563EB',
   blueMuted: 'rgba(37, 99, 235, 0.08)',

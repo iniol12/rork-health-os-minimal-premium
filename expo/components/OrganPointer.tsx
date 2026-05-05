@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { OrganStatus, getStatusColor, getStatusSoft } from '@/constants/colors';
+import { Animated, StyleSheet, TouchableOpacity, View, Text, Platform } from 'react-native';
+import { OrganStatus, getStatusColor } from '@/constants/colors';
 import { useTheme } from '@/contexts/ThemeContext';
 
 interface OrganPointerProps {
@@ -8,29 +8,22 @@ interface OrganPointerProps {
   y: number;
   status: OrganStatus;
   name: string;
+  label: string;
+  score: number;
   onPress: () => void;
 }
 
-export default function OrganPointer({ x, y, status, name, onPress }: OrganPointerProps) {
-  const { colors } = useTheme();
-  const pulseAnim = useRef(new Animated.Value(0.6)).current;
+export default function OrganPointer({ x, y, status, name, label, score, onPress }: OrganPointerProps) {
+  const { colors, isDark } = useTheme();
+  const pulseAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const color = getStatusColor(status, colors);
-  const softColor = getStatusSoft(status, colors);
 
   useEffect(() => {
     const pulse = Animated.loop(
       Animated.sequence([
-        Animated.timing(pulseAnim, {
-          toValue: 1,
-          duration: 1800,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseAnim, {
-          toValue: 0.4,
-          duration: 1800,
-          useNativeDriver: true,
-        }),
+        Animated.timing(pulseAnim, { toValue: 1, duration: 2200, useNativeDriver: true }),
+        Animated.timing(pulseAnim, { toValue: 0, duration: 2200, useNativeDriver: true }),
       ])
     );
     pulse.start();
@@ -38,20 +31,17 @@ export default function OrganPointer({ x, y, status, name, onPress }: OrganPoint
   }, [pulseAnim]);
 
   const handlePressIn = () => {
-    Animated.spring(scaleAnim, {
-      toValue: 1.3,
-      useNativeDriver: true,
-      friction: 6,
-    }).start();
+    Animated.spring(scaleAnim, { toValue: 0.94, useNativeDriver: true, friction: 6 }).start();
+  };
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true, friction: 5 }).start();
   };
 
-  const handlePressOut = () => {
-    Animated.spring(scaleAnim, {
-      toValue: 1,
-      useNativeDriver: true,
-      friction: 6,
-    }).start();
-  };
+  const ringScale = pulseAnim.interpolate({ inputRange: [0, 1], outputRange: [1, 1.55] });
+  const ringOpacity = pulseAnim.interpolate({ inputRange: [0, 1], outputRange: [0.35, 0] });
+
+  const chipBg = isDark ? 'rgba(20,20,24,0.78)' : 'rgba(255,255,255,0.92)';
+  const chipBorder = isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.06)';
 
   return (
     <TouchableOpacity
@@ -62,10 +52,33 @@ export default function OrganPointer({ x, y, status, name, onPress }: OrganPoint
       onPressOut={handlePressOut}
       activeOpacity={1}
     >
-      <Animated.View style={[styles.outerGlow, { opacity: pulseAnim, transform: [{ scale: scaleAnim }], backgroundColor: softColor }]} />
-      <Animated.View style={[styles.middleGlow, { opacity: pulseAnim, transform: [{ scale: scaleAnim }], backgroundColor: color + '30' }]} />
-      <Animated.View style={[styles.core, { transform: [{ scale: scaleAnim }], backgroundColor: color }]}>
-        <View style={[styles.innerHighlight, { backgroundColor: color }]} />
+      <Animated.View
+        pointerEvents="none"
+        style={[
+          styles.ring,
+          {
+            borderColor: color,
+            opacity: ringOpacity,
+            transform: [{ scale: ringScale }],
+          },
+        ]}
+      />
+      <Animated.View
+        style={[
+          styles.chip,
+          {
+            backgroundColor: chipBg,
+            borderColor: chipBorder,
+            shadowColor: isDark ? '#000' : '#000',
+            transform: [{ scale: scaleAnim }],
+          },
+        ]}
+      >
+        <View style={[styles.statusDot, { backgroundColor: color }]} />
+        <Text style={[styles.label, { color: colors.textPrimary }]} numberOfLines={1}>
+          {label}
+        </Text>
+        <Text style={[styles.score, { color: colors.textTertiary }]}>{score}</Text>
       </Animated.View>
     </TouchableOpacity>
   );
@@ -74,37 +87,49 @@ export default function OrganPointer({ x, y, status, name, onPress }: OrganPoint
 const styles = StyleSheet.create({
   container: {
     position: 'absolute' as const,
-    width: 44,
-    height: 44,
-    marginLeft: -22,
-    marginTop: -22,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
     zIndex: 10,
+    transform: [{ translateX: -1 }],
   },
-  outerGlow: {
+  ring: {
     position: 'absolute' as const,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    borderWidth: 1,
   },
-  middleGlow: {
-    position: 'absolute' as const,
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-  },
-  core: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+  chip: {
+    flexDirection: 'row' as const,
     alignItems: 'center' as const,
-    justifyContent: 'center' as const,
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+    borderRadius: 999,
+    borderWidth: 1,
+    gap: 6,
+    ...Platform.select({
+      ios: {
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
+      },
+      android: { elevation: 2 },
+      default: {},
+    }),
   },
-  innerHighlight: {
-    width: 5,
-    height: 5,
-    borderRadius: 2.5,
-    opacity: 0.7,
+  statusDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+  label: {
+    fontSize: 11,
+    fontWeight: '600' as const,
+    letterSpacing: 0.1,
+  },
+  score: {
+    fontSize: 10,
+    fontWeight: '500' as const,
+    letterSpacing: 0.2,
   },
 });

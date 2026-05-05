@@ -40,6 +40,8 @@ export default function BodySilhouette({ onOrganPress }: BodySilhouetteProps) {
           y={organ.position.y}
           status={organ.status}
           name={organ.id}
+          label={organ.name}
+          score={organ.score}
           onPress={() => onOrganPress(organ.id)}
         />
       ))}
